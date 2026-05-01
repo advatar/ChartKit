@@ -4,7 +4,11 @@
 
 import XCTest
 import SwiftUI
-@testable import Swift_Charts_Examples
+@testable import ChartKit
+
+#if os(macOS)
+import AppKit
+#endif
 
 final class ChartScreenshotGenerator: XCTestCase {
     @MainActor
@@ -27,10 +31,18 @@ final class ChartScreenshotGenerator: XCTestCase {
                             RoundedRectangle(cornerRadius: 10)
                                 .foregroundColor(.white)
                         }
-                    }
+                }
                 let renderer = ImageRenderer(content: view)
+                #if os(macOS)
+                renderer.scale = NSApplication.shared.mainWindow?.backingScaleFactor ?? 1
+                let image = try XCTUnwrap(renderer.nsImage, "Failed to generate image for chart '\(chart.title)'")
+                let tiffData = try XCTUnwrap(image.tiffRepresentation, "Failed to generate TIFF data for chart '\(chart.title)'")
+                let imageRepresentation = try XCTUnwrap(NSBitmapImageRep(data: tiffData), "Failed to generate image representation for chart '\(chart.title)'")
+                let pngData = try XCTUnwrap(imageRepresentation.representation(using: .png, properties: [:]), "Failed to generate PNG data for chart '\(chart.title)'")
+                #else
                 renderer.scale = UIScreen.main.scale
                 let pngData = try XCTUnwrap(renderer.uiImage?.pngData(), "Failed to generate PNG data for chart '\(chart.title)'")
+                #endif
                 let chartURL = categoryURL.appending(component: "\(chart.id).png")
                 try pngData.write(to: chartURL)
             }

@@ -4,12 +4,14 @@
 
 import SwiftUI
 
-struct ContentView: View {
+public struct ChartGalleryView: View {
     @StateObject private var imageCache = ImagesCache()
     @State private var selectedChartType: ChartType?
     @State var filterCategory: ChartCategory = .all
 
-    var body: some View {
+    public init() {}
+
+    public var body: some View {
         NavigationSplitView {
             List(selection: $selectedChartType) {
                 ForEach(displayedCategories) { category in
@@ -171,8 +173,8 @@ struct AccessiblePreviewImage: View, AXChartDescriptorRepresentable {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct ChartGalleryView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ChartGalleryView()
     }
 }

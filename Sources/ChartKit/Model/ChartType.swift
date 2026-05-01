@@ -13,6 +13,8 @@ enum ChartCategory: String, CaseIterable, Hashable, Identifiable {
     case range
     case heatMap
     case point
+    case health
+    case clinical
 
 	var id: String { self.rawValue }
 
@@ -34,6 +36,10 @@ enum ChartCategory: String, CaseIterable, Hashable, Identifiable {
             return "checkerboard.rectangle"
         case .point:
             return "point.3.connected.trianglepath.dotted"
+        case .health:
+            return "heart.text.square.fill"
+        case .clinical:
+            return "cross.case.fill"
 		}
 	}
 }
@@ -79,6 +85,23 @@ enum ChartType: String, Identifiable, CaseIterable {
     // Point Charts
     case scatter
     case vectorField
+
+    // Apple Health Charts
+    case healthSteps
+    case healthHeartRate
+    case healthCardioFitness
+    case healthVitals
+    case healthSleepStages
+    case healthCycleTracking
+    case healthMedicationEvents
+    case healthWorkoutDetails
+
+    // Clinical Health Records
+    case clinicalLabResults
+    case clinicalVitalSigns
+    case clinicalBloodPressure
+    case clinicalRecordsTimeline
+    case clinicalNotesCoverage
 
 	var id: String { self.rawValue }
 
@@ -136,6 +159,32 @@ enum ChartType: String, Identifiable, CaseIterable {
             return "Scatter Chart"
         case .vectorField:
             return "Vector Field"
+        case .healthSteps:
+            return "Health Steps"
+        case .healthHeartRate:
+            return "Health Heart Rate"
+        case .healthCardioFitness:
+            return "Health Cardio Fitness"
+        case .healthVitals:
+            return "Health Vitals"
+        case .healthSleepStages:
+            return "Health Sleep Stages"
+        case .healthCycleTracking:
+            return "Health Cycle Tracking"
+        case .healthMedicationEvents:
+            return "Health Medications & Events"
+        case .healthWorkoutDetails:
+            return "Health Workout Details"
+        case .clinicalLabResults:
+            return "Clinical Lab Results"
+        case .clinicalVitalSigns:
+            return "Clinical Vital Signs"
+        case .clinicalBloodPressure:
+            return "Clinical Blood Pressure"
+        case .clinicalRecordsTimeline:
+            return "Clinical Records Timeline"
+        case .clinicalNotesCoverage:
+            return "Clinical Notes & Coverage"
         }
     }
 
@@ -159,6 +208,10 @@ enum ChartType: String, Identifiable, CaseIterable {
             return .heatMap
         case .scatter, .vectorField:
             return .point
+        case .healthSteps, .healthHeartRate, .healthCardioFitness, .healthVitals, .healthSleepStages, .healthCycleTracking, .healthMedicationEvents, .healthWorkoutDetails:
+            return .health
+        case .clinicalLabResults, .clinicalVitalSigns, .clinicalBloodPressure, .clinicalRecordsTimeline, .clinicalNotesCoverage:
+            return .clinical
         case .scrollingBar:
             return .bar
         }
@@ -289,6 +342,32 @@ enum ChartType: String, Identifiable, CaseIterable {
             ScatterChart(isOverview: isOverview)
         case .vectorField:
             VectorField(isOverview: isOverview)
+        case .healthSteps:
+            HealthQuantityTimelineChart(isOverview: isOverview, style: .cumulative)
+        case .healthHeartRate:
+            HealthQuantityTimelineChart(isOverview: isOverview, style: .discreteRange)
+        case .healthCardioFitness:
+            HealthRangeBandChart(isOverview: isOverview, kind: .cardioFitness)
+        case .healthVitals:
+            HealthRangeBandChart(isOverview: isOverview, kind: .vitals)
+        case .healthSleepStages:
+            HealthSleepStagesChart(isOverview: isOverview)
+        case .healthCycleTracking:
+            HealthCycleTimelineChart(isOverview: isOverview)
+        case .healthMedicationEvents:
+            HealthMedicationEventsTimeline(isOverview: isOverview)
+        case .healthWorkoutDetails:
+            HealthWorkoutDetailChart(isOverview: isOverview)
+        case .clinicalLabResults:
+            ClinicalObservationChart(isOverview: isOverview, kind: .lab)
+        case .clinicalVitalSigns:
+            ClinicalObservationChart(isOverview: isOverview, kind: .vital)
+        case .clinicalBloodPressure:
+            ClinicalBloodPressureChart(isOverview: isOverview)
+        case .clinicalRecordsTimeline:
+            ClinicalRecordsTimelineChart(isOverview: isOverview, kind: .records)
+        case .clinicalNotesCoverage:
+            ClinicalRecordsTimelineChart(isOverview: isOverview, kind: .notesAndCoverage)
         }
     }
 }
