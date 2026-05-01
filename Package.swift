@@ -17,6 +17,10 @@ let package = Package(
     targets: [
         .target(
             name: "ChartKit"
+        ),
+        .testTarget(
+            name: "ChartKitTests",
+            dependencies: ["ChartKit"]
         )
     ]
 )

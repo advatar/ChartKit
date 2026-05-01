@@ -91,6 +91,46 @@ struct ChartsScreen: View {
 
 This is the currently public package entry point. The individual chart examples are still mostly internal to the package while the API is being shaped. For now, consume `ChartGalleryView` directly or use the source as implementation references.
 
+### Public Clinical Trend Charts
+
+For apps that need an individual clinical chart now, ChartKit exposes a narrow clinical trend API:
+
+- `ClinicalMetricTrendChart`
+- `ClinicalMetricSparklineChart`
+- `ClinicalTrendChartPoint`
+- `ClinicalTrendReferenceBand`
+- `ClinicalTrendXAxisLabelStyle`
+
+Map your app's clinical observations into `ClinicalTrendChartPoint`, keep selection state in the consuming app, and pass bindings into the chart:
+
+```swift
+import ChartKit
+import SwiftUI
+
+struct HemoglobinTrend: View {
+    @State private var selectedDate: Date?
+    @State private var scrollPosition = Date()
+
+    let points: [ClinicalTrendChartPoint]
+
+    var body: some View {
+        ClinicalMetricTrendChart(
+            points: points,
+            selectedPoint: points.last,
+            referenceBand: ClinicalTrendReferenceBand(low: 13.5, high: 17.5),
+            visibleDomainLength: 180 * 24 * 60 * 60,
+            usesYearAxisLabels: false,
+            axisLabelStyle: .month,
+            accentColor: .green,
+            selectedDate: $selectedDate,
+            scrollPosition: $scrollPosition
+        )
+    }
+}
+```
+
+`ClinicalMetricTrendChart` requires iOS 17 or macOS 14 because it uses Swift Charts selection and scroll APIs. `ClinicalMetricSparklineChart` is available anywhere the package can build.
+
 ## Demo App
 
 To inspect the charts visually, run the included demo app:
@@ -205,6 +245,7 @@ The fixtures are intentionally realistic enough to inspect layout and interactio
 The package is in an early refactor state.
 
 - `ChartGalleryView` is public and intended for demo/gallery embedding.
+- `ClinicalMetricTrendChart` and `ClinicalMetricSparklineChart` are public for app-level clinical observation charts.
 - Most individual chart components and model types are internal today.
 - The Health and Clinical chart views are fixture-backed first-pass implementations.
 - Public per-chart APIs should be stabilized once the HealthKit/FHIR adapter layer is designed.
