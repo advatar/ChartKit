@@ -1,10 +1,10 @@
 //
-// Copyright © 2022 Swift Charts Examples.
+// Copyright © 2022 ChartKit.
 // Open Source - MIT License
 
 import XCTest
 
-final class Swift_Charts_ExamplesUITestsLaunchTests: XCTestCase {
+final class ChartKitDemoUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

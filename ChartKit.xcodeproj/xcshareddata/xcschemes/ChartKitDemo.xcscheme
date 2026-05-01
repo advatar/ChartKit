@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C22EB59928568D0B000B9F9A"
-               BuildableName = "Swift Charts Examples.app"
-               BlueprintName = "Swift Charts Examples"
-               ReferencedContainer = "container:Swift Charts Examples.xcodeproj">
+               BuildableName = "ChartKitDemo.app"
+               BlueprintName = "ChartKitDemo"
+               ReferencedContainer = "container:ChartKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C22EB5AA28568D0C000B9F9A"
-               BuildableName = "Swift Charts ExamplesTests.xctest"
-               BlueprintName = "Swift Charts ExamplesTests"
-               ReferencedContainer = "container:Swift Charts Examples.xcodeproj">
+               BuildableName = "ChartKitDemoTests.xctest"
+               BlueprintName = "ChartKitDemoTests"
+               ReferencedContainer = "container:ChartKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C22EB59928568D0B000B9F9A"
-            BuildableName = "Swift Charts Examples.app"
-            BlueprintName = "Swift Charts Examples"
-            ReferencedContainer = "container:Swift Charts Examples.xcodeproj">
+            BuildableName = "ChartKitDemo.app"
+            BlueprintName = "ChartKitDemo"
+            ReferencedContainer = "container:ChartKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C22EB59928568D0B000B9F9A"
-            BuildableName = "Swift Charts Examples.app"
-            BlueprintName = "Swift Charts Examples"
-            ReferencedContainer = "container:Swift Charts Examples.xcodeproj">
+            BuildableName = "ChartKitDemo.app"
+            BlueprintName = "ChartKitDemo"
+            ReferencedContainer = "container:ChartKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

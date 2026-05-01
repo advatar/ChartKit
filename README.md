@@ -28,8 +28,8 @@ Sources/ChartKit/
   HealthCharts/           Apple Health and Clinical Health Record chart models, fixtures, and views
   Model/                  Demo catalog registration
   Utilities/              Shared platform and accessibility helpers
-Swift Charts Examples/    Demo app shell
-Swift Charts ExamplesTests/
+ChartKitDemo/    Demo app shell
+ChartKitDemoTests/
 ```
 
 The Xcode app target is intentionally thin. It imports `ChartKit` and launches `ChartGalleryView`.
@@ -45,7 +45,7 @@ In Xcode:
 3. Add this repository URL:
 
 ```text
-git@github.com:advatar/Swift-Charts-Examples.git
+git@github.com:advatar/ChartKit.git
 ```
 
 4. Select the `ChartKit` package product.
@@ -62,13 +62,13 @@ For a local package during development, add this repository folder as a local pa
 ```swift
 // Package.swift
 dependencies: [
-    .package(url: "git@github.com:advatar/Swift-Charts-Examples.git", branch: "main")
+    .package(url: "git@github.com:advatar/ChartKit.git", branch: "main")
 ],
 targets: [
     .target(
         name: "YourApp",
         dependencies: [
-            .product(name: "ChartKit", package: "Swift-Charts-Examples")
+            .product(name: "ChartKit", package: "ChartKit")
         ]
     )
 ]
@@ -136,17 +136,17 @@ struct HemoglobinTrend: View {
 To inspect the charts visually, run the included demo app:
 
 ```sh
-open "Swift Charts Examples.xcodeproj"
+open "ChartKit.xcodeproj"
 ```
 
-Then select the `Swift Charts Examples` scheme and run it.
+Then select the `ChartKitDemo` scheme and run it.
 
 Command-line build:
 
 ```sh
 xcodebuild \
-  -scheme 'Swift Charts Examples' \
-  -project 'Swift Charts Examples.xcodeproj' \
+  -scheme 'ChartKitDemo' \
+  -project 'ChartKit.xcodeproj' \
   -destination 'platform=macOS' \
   build \
   CODE_SIGNING_ALLOWED=NO
@@ -264,8 +264,8 @@ Build the demo app:
 
 ```sh
 xcodebuild \
-  -scheme 'Swift Charts Examples' \
-  -project 'Swift Charts Examples.xcodeproj' \
+  -scheme 'ChartKitDemo' \
+  -project 'ChartKit.xcodeproj' \
   -destination 'platform=macOS' \
   build \
   CODE_SIGNING_ALLOWED=NO
@@ -275,8 +275,8 @@ Build the test bundle:
 
 ```sh
 xcodebuild \
-  -scheme 'Swift Charts Examples' \
-  -project 'Swift Charts Examples.xcodeproj' \
+  -scheme 'ChartKitDemo' \
+  -project 'ChartKit.xcodeproj' \
   -destination 'platform=macOS' \
   build-for-testing \
   CODE_SIGNING_ALLOWED=NO
@@ -318,7 +318,7 @@ The GitHub issues in this repository track the Health and Clinical chart impleme
 - Clinical record timelines.
 - Screenshot catalog and visual QA against Apple Health references.
 
-## Original Swift Charts Examples
+## Original ChartKit
 
 The package still includes the original chart examples as implementation references.
 

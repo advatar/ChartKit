@@ -1,5 +1,5 @@
 //
-// Copyright © 2022 Swift Charts Examples.
+// Copyright © 2022 ChartKit.
 // Open Source - MIT License
 
 import Charts
