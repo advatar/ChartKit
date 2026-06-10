@@ -116,17 +116,30 @@ struct HealthQuantityTimelineChart: View {
 
     @ViewBuilder
     private var chart: some View {
-        Chart {
-            ForEach(data) { bucket in
-                switch style {
-                case .cumulative:
+        switch style {
+        case .cumulative:
+            Chart {
+                ForEach(data) { bucket in
                     BarMark(
                         x: .value("Date", bucket.start),
                         y: .value(title, bucket.value)
                     )
                     .clipShape(Capsule())
                     .foregroundStyle(tint.gradient)
-                case .discreteRange:
+                }
+
+                ForEach(selectedRuleBuckets) { bucket in
+                    RuleMark(x: .value("Selected", bucket.start))
+                        .foregroundStyle(.secondary.opacity(0.45))
+                }
+            }
+            .chartXAxis(isOverview ? .hidden : .automatic)
+            .chartYAxis(isOverview ? .hidden : .automatic)
+            .healthQuantitySelectionOverlay(selectedDate: $selectedDate)
+            .frame(height: isOverview ? Constants.previewChartHeight : Constants.detailChartHeight)
+        case .discreteRange:
+            Chart {
+                ForEach(data) { bucket in
                     BarMark(
                         x: .value("Time", bucket.start),
                         yStart: .value("Low", bucket.minimum ?? bucket.value),
@@ -144,30 +157,21 @@ struct HealthQuantityTimelineChart: View {
                     .symbolSize(isOverview ? 14 : 24)
                 }
 
-                if !isOverview, selectedBucket.id == bucket.id {
+                ForEach(selectedRuleBuckets) { bucket in
                     RuleMark(x: .value("Selected", bucket.start))
                         .foregroundStyle(.secondary.opacity(0.45))
                 }
             }
+            .chartXAxis(isOverview ? .hidden : .automatic)
+            .chartYAxis(isOverview ? .hidden : .automatic)
+            .healthQuantitySelectionOverlay(selectedDate: $selectedDate)
+            .frame(height: isOverview ? Constants.previewChartHeight : Constants.detailChartHeight)
         }
-        .chartXAxis(isOverview ? .hidden : .automatic)
-        .chartYAxis(isOverview ? .hidden : .automatic)
-        .chartOverlay { proxy in
-            GeometryReader { geometry in
-                Rectangle()
-                    .fill(.clear)
-                    .contentShape(Rectangle())
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                let origin = geometry[proxy.plotAreaFrame].origin
-                                let location = value.location.x - origin.x
-                                selectedDate = proxy.value(atX: location)
-                            }
-                    )
-            }
-        }
-        .frame(height: isOverview ? Constants.previewChartHeight : Constants.detailChartHeight)
+    }
+
+    private var selectedRuleBuckets: [HealthQuantityBucket] {
+        guard !isOverview else { return [] }
+        return data.filter { selectedBucket.id == $0.id }
     }
 }
 
@@ -525,9 +529,11 @@ struct ClinicalObservationChart: View {
         }
     }
 
+    @ViewBuilder
     private var chart: some View {
-        Chart {
-            if kind == .lab {
+        switch kind {
+        case .lab:
+            Chart {
                 RectangleMark(
                     xStart: .value("Start", data.first?.date ?? Date()),
                     xEnd: .value("End", data.last?.date ?? Date()),
@@ -535,29 +541,40 @@ struct ClinicalObservationChart: View {
                     yEnd: .value("Normal High", 5.6)
                 )
                 .foregroundStyle(.green.opacity(0.14))
-            } else {
+
+                clinicalObservationMarks(tint: .purple)
+            }
+            .chartXAxis(isOverview ? .hidden : .automatic)
+            .chartYAxis(isOverview ? .hidden : .automatic)
+            .frame(height: isOverview ? Constants.previewChartHeight : Constants.detailChartHeight)
+        case .vital:
+            Chart {
                 RuleMark(y: .value("Recommended", 200))
                     .foregroundStyle(.orange)
                     .lineStyle(.init(lineWidth: 1, dash: [4]))
-            }
 
-            ForEach(data) { point in
-                LineMark(
-                    x: .value("Date", point.date),
-                    y: .value(point.name, point.value)
-                )
-                .foregroundStyle((kind == .lab ? Color.purple : Color.teal).gradient)
-
-                PointMark(
-                    x: .value("Date", point.date),
-                    y: .value(point.name, point.value)
-                )
-                .foregroundStyle(point.interpretation == nil ? (kind == .lab ? .purple : .teal) : .orange)
+                clinicalObservationMarks(tint: .teal)
             }
+            .chartXAxis(isOverview ? .hidden : .automatic)
+            .chartYAxis(isOverview ? .hidden : .automatic)
+            .frame(height: isOverview ? Constants.previewChartHeight : Constants.detailChartHeight)
         }
-        .chartXAxis(isOverview ? .hidden : .automatic)
-        .chartYAxis(isOverview ? .hidden : .automatic)
-        .frame(height: isOverview ? Constants.previewChartHeight : Constants.detailChartHeight)
+    }
+
+    private func clinicalObservationMarks(tint: Color) -> some ChartContent {
+        ForEach(data) { point in
+            LineMark(
+                x: .value("Date", point.date),
+                y: .value(point.name, point.value)
+            )
+            .foregroundStyle(tint.gradient)
+
+            PointMark(
+                x: .value("Date", point.date),
+                y: .value(point.name, point.value)
+            )
+            .foregroundStyle(point.interpretation == nil ? tint : .orange)
+        }
     }
 }
 
@@ -670,6 +687,26 @@ struct ClinicalRecordsTimelineChart: View {
             }
         }
         .frame(height: isOverview ? Constants.previewChartHeight : nil, alignment: .top)
+    }
+}
+
+private extension View {
+    func healthQuantitySelectionOverlay(selectedDate: Binding<Date?>) -> some View {
+        chartOverlay { proxy in
+            GeometryReader { geometry in
+                Rectangle()
+                    .fill(.clear)
+                    .contentShape(Rectangle())
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { value in
+                                let origin = geometry[proxy.plotAreaFrame].origin
+                                let location = value.location.x - origin.x
+                                selectedDate.wrappedValue = proxy.value(atX: location)
+                            }
+                    )
+            }
+        }
     }
 }
 

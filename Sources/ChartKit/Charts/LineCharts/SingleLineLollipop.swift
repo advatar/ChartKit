@@ -61,13 +61,13 @@ struct SingleLineLollipop: View {
   
     private var chart: some View {
         Chart(data, id: \.day) { chartMarker in
-            let baselineMarker = getBaselineMarker(marker: chartMarker)
-            if CompareSelectedMarkerToChartMarker(selectedMarker: selectedElement, chartMarker: chartMarker) && showLollipop {
-                baselineMarker.symbol() {
-                    Circle().strokeBorder(chartColor, lineWidth: 2).background(Circle().foregroundColor(lollipopColor)).frame(width: 11)
-                }
-            } else {
-                baselineMarker.symbol(Circle().strokeBorder(lineWidth: lineWidth))
+            let isSelected = CompareSelectedMarkerToChartMarker(selectedMarker: selectedElement, chartMarker: chartMarker) && showLollipop
+            getBaselineMarker(marker: chartMarker)
+                .symbol {
+                    Circle()
+                        .strokeBorder(chartColor, lineWidth: isSelected ? 2 : lineWidth)
+                        .background(Circle().foregroundColor(isSelected ? lollipopColor : .clear))
+                        .frame(width: isSelected ? 11 : 8)
             }
         }
         .chartOverlay { proxy in

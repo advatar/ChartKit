@@ -34,34 +34,50 @@ public struct HealthMetricSparklineChart: View {
     }
 
     public var body: some View {
-        Chart {
-            switch style {
-            case .line:
-                ForEach(points) { point in
-                    AreaMark(
-                        x: .value("Date", point.date),
-                        y: .value("Value", point.value)
-                    )
-                    .interpolationMethod(.catmullRom)
-                    .foregroundStyle(tintColor.opacity(0.12))
+        switch style {
+        case .line:
+            lineChart
+        case .bar:
+            barChart
+        }
+    }
 
-                    LineMark(
-                        x: .value("Date", point.date),
-                        y: .value("Value", point.value)
-                    )
-                    .interpolationMethod(.catmullRom)
-                    .lineStyle(StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
-                    .foregroundStyle(tintColor)
-                }
-            case .bar:
-                ForEach(points) { point in
-                    BarMark(
-                        x: .value("Date", point.date),
-                        y: .value("Value", point.value)
-                    )
-                    .clipShape(Capsule())
-                    .foregroundStyle(tintColor.gradient)
-                }
+    private var lineChart: some View {
+        Chart {
+            ForEach(points) { point in
+                AreaMark(
+                    x: .value("Date", point.date),
+                    y: .value("Value", point.value)
+                )
+                .interpolationMethod(.catmullRom)
+                .foregroundStyle(tintColor.opacity(0.12))
+
+                LineMark(
+                    x: .value("Date", point.date),
+                    y: .value("Value", point.value)
+                )
+                .interpolationMethod(.catmullRom)
+                .lineStyle(StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                .foregroundStyle(tintColor)
+            }
+        }
+        .chartXAxis(.hidden)
+        .chartYAxis(.hidden)
+        .chartLegend(.hidden)
+        .chartPlotStyle { plot in
+            plot.background(.clear)
+        }
+    }
+
+    private var barChart: some View {
+        Chart {
+            ForEach(points) { point in
+                BarMark(
+                    x: .value("Date", point.date),
+                    y: .value("Value", point.value)
+                )
+                .clipShape(Capsule())
+                .foregroundStyle(tintColor.gradient)
             }
         }
         .chartXAxis(.hidden)
@@ -95,41 +111,75 @@ public struct HealthMetricChart: View {
     }
 
     public var body: some View {
+        switch style {
+        case .line:
+            lineChart
+        case .bar:
+            barChart
+        }
+    }
+
+    private var lineChart: some View {
         Chart {
-            switch style {
-            case .line:
-                ForEach(points) { point in
-                    AreaMark(
-                        x: .value("Date", point.date),
-                        y: .value("Value", point.value)
-                    )
-                    .interpolationMethod(.catmullRom)
-                    .foregroundStyle(tintColor.opacity(0.15))
+            ForEach(points) { point in
+                AreaMark(
+                    x: .value("Date", point.date),
+                    y: .value("Value", point.value)
+                )
+                .interpolationMethod(.catmullRom)
+                .foregroundStyle(tintColor.opacity(0.15))
 
-                    LineMark(
-                        x: .value("Date", point.date),
-                        y: .value("Value", point.value)
-                    )
-                    .interpolationMethod(.catmullRom)
-                    .lineStyle(StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
-                    .foregroundStyle(tintColor)
+                LineMark(
+                    x: .value("Date", point.date),
+                    y: .value("Value", point.value)
+                )
+                .interpolationMethod(.catmullRom)
+                .lineStyle(StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
+                .foregroundStyle(tintColor)
 
-                    PointMark(
-                        x: .value("Date", point.date),
-                        y: .value("Value", point.value)
-                    )
-                    .symbolSize(16)
-                    .foregroundStyle(tintColor)
-                }
-            case .bar:
-                ForEach(points) { point in
-                    BarMark(
-                        x: .value("Date", point.date),
-                        y: .value("Value", point.value)
-                    )
-                    .clipShape(Capsule())
-                    .foregroundStyle(tintColor.gradient)
-                }
+                PointMark(
+                    x: .value("Date", point.date),
+                    y: .value("Value", point.value)
+                )
+                .symbolSize(16)
+                .foregroundStyle(tintColor)
+            }
+        }
+        .chartLegend(.hidden)
+        .chartXAxis {
+            AxisMarks(values: .automatic(desiredCount: desiredXAxisMarkCount)) { value in
+                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.6))
+                    .foregroundStyle(.quaternary)
+                AxisTick()
+                    .foregroundStyle(.secondary)
+                AxisValueLabel(format: dateFormat)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .chartYAxis {
+            AxisMarks(position: .leading) { _ in
+                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.6))
+                    .foregroundStyle(.quaternary)
+                AxisValueLabel()
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .chartPlotStyle { plotArea in
+            plotArea
+                .background(Color.primary.opacity(0.025))
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        }
+    }
+
+    private var barChart: some View {
+        Chart {
+            ForEach(points) { point in
+                BarMark(
+                    x: .value("Date", point.date),
+                    y: .value("Value", point.value)
+                )
+                .clipShape(Capsule())
+                .foregroundStyle(tintColor.gradient)
             }
         }
         .chartLegend(.hidden)
